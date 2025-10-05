@@ -1,0 +1,62 @@
+💬 Q: What is Encapsulation?
+
+Answer:
+Encapsulation is an OOP principle that hides internal data (state) of an object and exposes only 
+necessary behaviors through public methods.
+It ensures that object data cannot be accessed or modified directly — only via controlled methods.
+
+🧩 Steps to Implement Encapsulation:
+
+    Declare class fields as private or protected — to restrict direct access.
+
+    Provide public getter/setter methods (or only getter if read-only).
+
+    Use validation inside these methods to maintain data integrity.
+
+    Expose only required methods so that the internal logic remains hidden.
+
+🧠 Example (Simple):
+    class BankAccount {
+    private balance: number = 0;
+
+    deposit(amount: number) {
+        if (amount > 0) this.balance += amount;
+    }
+
+    getBalance() {
+        return this.balance;
+    }
+    }
+
+
+Here, the balance can’t be accessed or modified directly — only through defined methods.
+
+⚙️ Where I Used Encapsulation in My Automation Framework:
+
+I used encapsulation in multiple areas, for example:
+
+1. DriverManager / BrowserFactory:
+
+    The WebDriver instance was kept private.
+
+    Only exposed through a getter method like getDriver().
+
+    This prevented other classes from directly creating or modifying the driver instance.
+
+2. ConfigManager / TestDataManager:
+
+    Configuration values (like URLs, credentials) were stored in private variables.
+
+    Accessed through public getters, ensuring no class could overwrite them.
+
+3. BasePage / PageObjects:
+
+    Web elements are private.
+
+    Interactions happen through public methods (e.g., login(username, password)), hiding low-level details like locators or waits.
+
+
+✅ In short:
+
+“Encapsulation helps me in automation to protect internal framework data like driver, config, and 
+page elements — ensuring controlled and consistent access through well-defined public methods.”

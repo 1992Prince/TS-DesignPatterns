@@ -1,0 +1,135 @@
+Nice — here are Playwright+TypeScript framework use-cases where subtype polymorphism (interface → many implementations) fits perfectly, with short, practical examples you can paste into your framework.
+
+I'll show 2 compact, realistic patterns you can implement right away:
+
+
+1) Authentication Strategy — AuthStrategy (login methods vary: cookie, OAuth, SSO)
+
+Use when different apps/environments require different login flows. Your test code accepts the 
+AuthStrategy interface (super type) and can work with any concrete strategy (subtype).
+
+// auth.ts
+import { Page } from "@playwright/test";
+
+export interface AuthStrategy {
+  // perform login on given page (framework calls this)
+  login(page: Page): Promise<void>;
+}
+
+// basic-auth.ts
+import { AuthStrategy } from "./auth";
+import { Page } from "@playwright/test";
+
+export class BasicAuth implements AuthStrategy {
+  constructor(private username: string, private password: string) {}
+  async login(page: Page) {
+    await page.goto("/login");
+    await page.fill("#user", this.username);
+    await page.fill("#pass", this.password);
+    await page.click("button[type=submit]");
+    // wait / validate
+  }
+}
+
+// sso-auth.ts
+import { AuthStrategy } from "./auth";
+import { Page } from "@playwright/test";
+
+export class SsoAuth implements AuthStrategy {
+  async login(page: Page) {
+    await page.goto("/sso-login");
+    // SSO redirect, external provider flow, OTP, etc.
+  }
+}
+
+// usage in a test or fixture
+async function performLogin(auth: AuthStrategy, page: Page) {
+  // polymorphism: this function accepts any subtype of AuthStrategy
+  await auth.login(page);
+}
+
+// example
+// test.ts
+const auth = new BasicAuth("user", "pass"); // or new SsoAuth()
+await performLogin(auth, page);
+
+
+Why this helps
+
+Add new login flows without touching tests or performLogin.
+
+Tests stay readable: performLogin(auth, page) — same call for all variants.
+
+Easier to mock in unit tests (pass a fake AuthStrategy).
+
+
+
+2) Artifact / Storage Provider — save screenshots/logs to disk, S3, or report portal
+
+Abstract where test artifacts go. The framework calls ArtifactStorage.save(...). Concrete 
+implementations can be LocalStorage, S3Storage, ReportPortalStorage, etc.
+
+// storage.ts
+export interface ArtifactStorage {
+  save(filename: string, buffer: Buffer): Promise<string>; // returns URL or path
+}
+
+// local-storage.ts
+import { ArtifactStorage } from "./storage";
+import fs from "fs/promises";
+export class LocalStorage implements ArtifactStorage {
+  constructor(private basePath = "./artifacts") {}
+  async save(filename: string, buffer: Buffer) {
+    const full = `${this.basePath}/${filename}`;
+    await fs.mkdir(this.basePath, { recursive: true });
+    await fs.writeFile(full, buffer);
+    return full;
+  }
+}
+
+// s3-storage.ts (pseudo)
+import { ArtifactStorage } from "./storage";
+export class S3Storage implements ArtifactStorage {
+  constructor(private bucket: string) {}
+  async save(filename: string, buffer: Buffer) {
+    // upload to S3 and return public URL
+    return `https://s3.amazonaws.com/${this.bucket}/${filename}`;
+  }
+}
+
+// usage in test-runner
+async function persistScreenshot(storage: ArtifactStorage, name: string, buffer: Buffer) {
+  const location = await storage.save(name, buffer);
+  console.log("Saved:", location);
+}
+
+
+Why this helps
+
+Switch storage backend by config (dev → local, CI → S3) with no test changes.
+
+Centralized handling of retries, compression, naming rules inside each storage class.
+
+Add new backends (Azure Blob, GCS, report portal) by implementing ArtifactStorage.
+
+
+
+Quick extra ideas (one-liners)
+
+    Reporter adapter: TestReporter interface → ConsoleReporter, AllureReporter, CustomSlackReporter.
+
+    Retry strategy: RetryPolicy → FixedRetry, ExponentialBackoff.
+
+    Locator wrappers / Element actions: Clickable interface implemented by page sections/components 
+    that have .click() semantics.
+
+    Test data provider: TestDataProvider → JsonFileProvider, DbProvider, ApiProvider.
+
+
+
+Interview-ready summary (1–2 lines)
+
+“In Playwright frameworks I use subtype polymorphism for pluggable strategies — e.g., 
+an AuthStrategy or ArtifactStorage interface allows tests to call one method (login, save) 
+while swapping implementations (BasicAuth, SSO, Local, S3) by config. 
+This keeps tests decoupled, extensible, and easy to mock.”

@@ -1,0 +1,29 @@
+Key Points (short)
+
+    PaymentMethod is the super type (interface).
+
+    CreditCard and PayPal are subtypes that implement that interface.
+
+    checkout(payment: PaymentMethod, ...) accepts any subtype — that's polymorphism.
+
+    At runtime, the correct pay() implementation is invoked for the actual subtype instance 
+    (dynamic dispatch).
+
+
+
+Why this is useful
+
+    ✅ Single API: One checkout method works for many payment types.
+
+    ✅ Extensible: To add UPI or ApplePay, just implement PaymentMethod — no change to checkout.
+
+    ✅ Testable: Pass in a mock implementing PaymentMethod in tests.
+
+    ✅ Maintainable: Provider-specific logic stays inside each class; orchestration stays in one 
+        place.
+
+Interview-ready 1–2 line answer
+
+“Polymorphism (subtype) lets a method accept a parent type (interface/base class) and work with 
+any implementing subclass — e.g., checkout(payment: PaymentMethod) can accept CreditCard, PayPal, 
+or any new payment class, enabling extensibility and cleaner code.”

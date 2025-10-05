@@ -1,0 +1,69 @@
+# ============================================================
+# 🚀 Playwright + TypeScript Framework .gitignore
+# ============================================================
+
+# Node modules
+node_modules/
+
+# Build outputs (TypeScript compiled JS)
+dist/
+build/
+out/
+
+# Playwright test artifacts
+test-results/
+playwright-report/
+blob-report/
+trace.zip
+*.zip
+*.trace
+
+# Logs and debug output
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment and credentials
+.env
+.env.*
+!env.example    # Keep a template if you use one
+
+# IDE / Editor specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# OS generated files
+Desktop.ini
+
+# Coverage reports
+coverage/
+lcov-report/
+
+# Jest or Mocha cache
+.cache/
+jest-cache/
+mochawesome-report/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Package manager lock files (optional — if you don’t want to commit them)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# ============================================================
+# ✅ Notes:
+# - Keeps repo clean from node_modules, build, and test outputs
+# - Keeps reports and traces local only
+# - Keeps sensitive data like .env out of git
+# - Keeps editor/project-specific files ignored
+# ============================================================

@@ -1,0 +1,25 @@
+{
+  "name": "ts-designpatterns",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1992Prince/TS-DesignPatterns.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1992Prince/TS-DesignPatterns/issues"
+  },
+  "homepage": "https://github.com/1992Prince/TS-DesignPatterns#readme",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
