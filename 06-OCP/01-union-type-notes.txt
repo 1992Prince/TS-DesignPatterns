@@ -1,0 +1,164 @@
+🧩 UNION TYPES IN TYPESCRIPT
+🧠 Concept
+
+A union type allows a variable, parameter, or return value to hold more than one possible type.
+
+Think of it as:
+
+“This variable can be either of these types.”
+
+📘 Syntax
+let value: TypeA | TypeB;
+
+
+The | means type-level OR, not logical OR (||).
+
+🔹 1️⃣ Union Types with Primitive Types
+
+Example:
+
+let id: number | string;
+
+id = 101;     // ✅ valid
+id = "EMP45"; // ✅ valid
+id = true;    // ❌ invalid (not part of union)
+
+
+💡 Why use:
+Sometimes APIs return either a number or string (e.g., an ID that can be numeric or alphanumeric).
+
+🔹 2️⃣ Union Types with Custom Types (Interfaces / Objects)
+
+Example:
+
+type Student = { name: string; grade: number; };
+type Teacher = { name: string; subject: string; };
+
+let person: Student | Teacher;
+
+person = { name: "Rahul", grade: 9 };        // ✅ valid
+person = { name: "Priya", subject: "Math" }; // ✅ valid
+person = { name: "Raj" };                    // ❌ invalid
+
+
+💡 The object must satisfy at least one complete type in the union.
+
+🔹 3️⃣ Union Types with Literal Values (String Literal Unions)
+
+Example:
+
+type Direction = "up" | "down" | "left" | "right";
+
+function move(dir: Direction) {
+  console.log("Moving " + dir);
+}
+
+move("up");    // ✅
+move("left");  // ✅
+move("north"); // ❌ not allowed
+
+
+💡 Common in frameworks like Playwright, React, etc. — e.g.
+waitUntil: "load" | "domcontentloaded" | "networkidle"
+
+🔹 4️⃣ Union Types with Mixed Values and Types
+
+Example:
+
+type Response = "success" | "error" | number;
+
+let res: Response;
+
+res = "success"; // ✅
+res = "error";   // ✅
+res = 404;       // ✅
+res = true;      // ❌
+
+
+💡 You can mix literal values, primitive types, and even objects.
+
+🔹 5️⃣ Narrowing Unions (Type Guards)
+
+When you use a union, you must check its actual type before using type-specific operations.
+
+Example:
+
+function printId(id: number | string) {
+  if (typeof id === "string") {
+    console.log(id.toUpperCase()); // ✅ safe
+  } else {
+    console.log(id.toFixed(2)); // ✅ safe
+  }
+}
+
+
+💡 This checking is called type narrowing — it helps TS infer the exact type during execution flow.
+
+🔹 6️⃣ Arrays with Union Types
+
+There’s a difference between:
+
+let arr1: (number | string)[] = [1, "a", 2]; // ✅ elements can be both
+let arr2: number[] | string[];               // ❌ either all numbers or all strings
+
+
+💡 (number | string)[] → mixed array
+number[] | string[] → homogeneous array (decide later which)
+
+🔹 7️⃣ Union Types in Function Parameters / Returns
+
+Example:
+
+function format(value: string | number): string {
+  return typeof value === "string" ? value.toUpperCase() : value.toFixed(2);
+}
+
+console.log(format("hello")); // HELLO
+console.log(format(123.456)); // 123.46
+
+
+
+
+⚙️ INSTALLATION — TS PROJECT VIA NPM
+
+When you clone a TypeScript-based Node.js project (that has a package.json):
+
+🪜 Steps
+
+1️⃣ Open terminal in project root
+(where you see package.json)
+
+2️⃣ Install all dependencies
+
+npm install
+
+
+✅ This will create a node_modules folder and download everything from package.json.
+
+3️⃣ Verify installation
+
+npx tsc --version
+
+
+4️⃣ Build or run
+Check scripts in package.json and run accordingly:
+
+npm run build      # compiles TS → JS
+npm run dev        # runs in watch/dev mode
+npm start          # starts server/app
+
+
+5️⃣ (Optional) Initialize TS config (if not already present)
+
+npx tsc --init
+
+
+✅ In short:
+
+Union types = “either-or” types (| is type-level OR)
+
+Great for making APIs safer and predictable
+
+Commonly used with literal values (e.g. "regular" | "premium")
+
+Install project dependencies with npm install

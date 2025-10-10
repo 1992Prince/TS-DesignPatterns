@@ -1,0 +1,80 @@
+🧠 What does !Singleton.instance mean?
+
+Singleton.instance can hold either:
+
+undefined (default for static variables not yet assigned)
+
+or an actual object reference once assigned.
+
+The ! (logical NOT) operator converts a value to a boolean, and then negates it.
+
+🔍 Step-by-step truth table:
+
+| `Singleton.instance` value | Boolean Conversion | `!Singleton.instance` result      |
+| -------------------------- | ------------------ | --------------------------------- |
+| `undefined`                | `false`            | `true` ✅ (means not created yet)  |
+| `null`                     | `false`            | `true` ✅ (means not created yet)  |
+| *any object*               | `true`             | `false` ❌ (means instance exists) |
+
+
+⚙️ So in simple words:
+
+if (!Singleton.instance)
+→ checks if the instance is falsy (i.e. not yet created).
+
+If yes → it creates a new one.
+If no → it reuses the existing one.
+
+💡 Note
+
+In JavaScript/TypeScript:
+
+Static class fields default to undefined unless initialized.
+
+So initially, Singleton.instance is undefined, and !undefined → true.
+
+After assignment, Singleton.instance holds an object → !object → false.
+
+✅ Therefore
+
+if (!Singleton.instance)
+
+
+is equivalent to:
+
+if (Singleton.instance === undefined || Singleton.instance === null)
+
+
+But the ! shorthand is cleaner and idiomatic in JS.
+
+
+------------------------------------------------------------------------
+
+
+🧩 When we add _ in class variables
+
+Example:
+
+class User {
+  private _name: string;
+
+  constructor(name: string) {
+    this._name = name;
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  set name(value: string) {
+    this._name = value.trim();
+  }
+}
+
+🧠 What does the underscore _ actually mean?
+
+➡️ In JavaScript and TypeScript, _ has no special meaning to the compiler.
+
+It’s just a naming convention, used by developers to indicate:
+
+“This property is intended to be private or used internally only.”

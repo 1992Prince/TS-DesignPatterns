@@ -1,0 +1,78 @@
+🧩 1. Basic Singleton Pattern Questions
+
+These test your conceptual clarity:
+
+What is the Singleton design pattern?
+
+How does Singleton differ from a static class or object literal in TypeScript?
+
+What problem does the Singleton pattern solve?
+
+What are the key components of a Singleton class?
+
+How do you restrict object creation in Singleton?
+
+Why do we keep the constructor private?
+
+What are the advantages and disadvantages of using a Singleton pattern?
+
+Can you give a simple example of Singleton in TypeScript?
+
+What happens if you don’t make the constructor private?
+
+How can you prevent multiple instances when the class is extended?
+
+
+
+🧠 2. Intermediate Questions (Implementation Focused)
+
+These check how well you can code or reason about framework design.
+
+Show how to implement a Singleton in TypeScript.
+
+Is your Singleton thread-safe in Node.js? Why or why not?
+
+How would you make a Singleton thread-safe?
+
+How can you lazy-load a Singleton instance?
+
+Can you modify a Singleton to support dependency injection?
+
+What are common anti-patterns or pitfalls with Singleton?
+
+How would you unit test a Singleton class?
+
+How do you reset a Singleton instance in testing (e.g., to reinitialize browser or config)?
+
+How can a Singleton cause memory leaks or state pollution in tests?
+
+What’s the difference between Singleton and Monostate pattern?
+
+
+
+
+⚙️ 3. Framework-Specific Singleton Use Cases (Automation Context)
+
+These are the real questions asked in automation engineer / SDET interviews 👇
+
+Playwright / Selenium Automation Framework
+
+Why is Singleton used for Playwright’s Browser or BrowserContext object?
+
+How would you design a Singleton class for the Playwright Browser?
+
+How would you handle multiple test parallelization when using a Singleton browser?
+
+Should the Playwright Page object be Singleton? Why or why not?
+
+How would you design a Singleton for managing test configuration (e.g., from config.json)?
+
+How can you make your Logger class Singleton and use it across all test files?
+
+How would you implement a Singleton for environment management (staging, prod, etc.)?
+
+Why might Singleton cause flaky tests if not implemented carefully in a parallel test setup?
+
+How do you manage cleanup (e.g., closing the browser) in a Singleton pattern?
+
+How does Singleton improve performance or resource usage in an automation framework?

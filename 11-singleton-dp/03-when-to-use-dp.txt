@@ -1,0 +1,87 @@
+🧠 Singleton Design Pattern — Kab Use Karein (Simple Hinglish Me)
+
+
+1️⃣ Jab Global Variables Use Kar Rahe Ho
+
+Agar tum system me aise global variables use kar rahe ho jinka data sab jagah same rehna chahiye,
+toh wo ek Singleton ka clear signal hai.
+
+Example: App-wide configuration, environment setup, global logger, etc.
+
+Singleton se ye ensure hota hai ki sirf ek hi instance ho aur sab parts same value use karein.
+
+
+
+2️⃣ Jab Multiple Parts Same Shared Resource Access Kar Rahe Ho
+
+Agar tumhara system ke alag-alag modules ek hi shared resource (like cache, config, logger) access 
+kar rahe hain,
+toh Singleton se wo resource centralized ho jaata hai.
+
+Matlab ek hi jagah se control rahega, aur agar koi value change kare bhi,
+toh wo sab jagah reflect karega.
+
+
+
+3️⃣ Jab Repeated Initialization Ho Rahi Hai
+
+Agar tum dekh rahe ho ki ek hi cheez baar-baar initialize kar rahe ho 
+(like DB connection, File system, etc.),
+toh ye bhi ek code smell hai.
+
+Singleton se tum ek hi baar expensive initialization karoge,
+baad me getInstance() se same object reuse kar paoge.
+
+Example: Database connection setup, API client, configuration loader.
+
+
+
+4️⃣ Jab Duplicate Instances Nahi Chahiye
+
+Agar tumhare system me same class ke multiple identical objects ban rahe hain
+jinko actually alag state maintain karne ki zarurat nahi hai,
+toh Singleton use karo.
+
+Singleton ensure karega ki sirf ek instance exist kare pura app me.
+
+
+------------------------------------------------------------
+
+
+✅ Kahan Singleton use karna chahiye (Playwright TS framework)
+
+ - Logger
+
+    Ek global logger jo across files same format / level use kare — Singleton best fit.
+
+    Par dhyaan: agar parallel workers mein alag file/stream chahiye (per-worker file), toh 
+    worker-level instance chahiye.
+
+- Config / App settings
+
+    config jo process-start pe load hota hai (env, json) — ek hi instance across modules easy access 
+    ke liye.
+
+    But: agar tum tests ko different configs ke saath run karte ho, toh per-test/fixture config use 
+    karo.
+
+- DB Connection Pool / API Client (initialized resources)
+
+    DB client ya HTTP client pool jo expensive initialize hota — single shared pool useful hai.
+
+    Important: Playwright tests parallel run hote hain in multiple worker processes — singleton will 
+    be per Node process, not global across processes. Agar DB ke saath shared state problem ho, 
+    use pooling or per-worker connections.
+
+
+⚠️ Jab Singleton avoid karo (Playwright-specific)
+
+    Per-test isolation chahiye → use fixtures, not singletons.
+
+    Mutable global state (test-specific state) — cause flaky tests in parallel.
+
+    Cross-process sharing expect karna — Node has multiple worker processes; Singleton 
+    is per-process only.
+
+    If tests run truly parallel and affect same DB data, prefer test-scoped resources or 
+    reset DB per test.

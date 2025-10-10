@@ -1,0 +1,57 @@
+Interface Segregation Principle in TypeScript
+
+In layman's terms, don't add additional functionality to an existing interface by adding new methods. 
+Instead, create a new interface.
+
+Formal idea:
+
+"Clients should not be forced to depend on interfaces they do not use."
+
+In simple words:
+It means we should not create one big, bulky interface with too many methods.
+Instead, we should break it into smaller, specific interfaces so that a class only needs to 
+implement the methods that are relevant to it.
+
+"Suppose we have a machine that can print, scan, and fax. So, we create one big interface Machine 
+with methods print(), scan(), and fax(). 
+
+Our multi-task machine class implements this interface and it’s fine because it supports all 
+three functions.
+
+But later, we need a simple printer or a scanner machine. If these single-purpose classes also 
+implement the same Machine interface, they’ll be forced to provide empty or meaningless 
+implementations for methods they don’t actually support — like fax() for a printer.
+
+This violates the Interface Segregation Principle.
+
+The solution is — instead of creating one bulky interface, we should split it into smaller ones 
+like Printer, Scanner, and FaxMachine. Then, each class implements only what it needs. 
+This way, no class depends on methods it doesn’t use — and that’s what ISP promotes."
+
+🔥 Optional 1-line closer:
+
+"In short, keep interfaces small and focused so classes only implement what they really need."
+
+
+In Automation framework ISP can be implemented in below usecases
+
+In base page , we mostly keep some abstract methods so that all page objects must implement them
+like isAt(), validateTitle(), validateTableText(), validateTableCol() etc.
+Not all pages will do all above validations but still they need to implement them since they are abstract.
+And base page is also becoming bigger.
+This breaks ISP principle.
+Don’t use one giant BasePage (with lots of methods and validation methods) — split by validation/behavior.
+A page extending it will not need all methods or have to implement all abstract methods of base page
+Example: move form checks to FormValidation and table checks to TableValidation so pages only implement what they need.
+
+Expose small capability interfaces and delegate to helpers.
+Example: FileUploadCapability is implemented by a FileUploadHelper used by pages that need uploads — keeps page objects slim.
+
+Make pages mock-friendly by depending on capabilities, not concrete pages.
+Example: unit tests mock ToastNotificationCapability or ApiInterceptsCapability rather than stubbing 30 unrelated methods.
+
+Compose behaviors for complex pages instead of inheritance.
+Example: a dashboard page composes FilterCapability + ExportCapability instead of inheriting everything from a big base.
+
+Refactor incrementally and avoid over-splitting — group related methods sensibly.
+Example: start with Form and Table capabilities, migrate pages one-by-one, and only create new capability when reused by multiple pages.

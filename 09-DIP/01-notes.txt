@@ -1,0 +1,163 @@
+1) What DIP means (simple plain language)
+
+Dependency Inversion Principle:
+High-level modules (your business/test logic) should not depend on low-level modules 
+(concrete helpers). Both should depend on abstractions (interfaces). 
+Abstractions should not depend on details; details depend on abstractions.
+
+Purpose: make code flexible and testable — so you can swap implementations (real vs mock) 
+without changing the business logic.
+
+
+2) What problem you see when you don’t follow DIP (Playwright+TS examples)
+
+Tight coupling: Page objects create new RealApiClient() or call fetch() directly inside 
+                methods → pages depend on network code.
+
+Hard-to-test: Unit tests hit real network or file system because you can’t replace the concrete 
+              client easily.
+
+Ripple changes: Changing a low-level library (e.g., switching fetch → playwright.request) forces 
+                edits across many pages/tests.
+
+Poor reusability: You can’t reuse the same page logic with a fake client in CI or a mock in unit 
+                  tests — leads to flaky CI and slow tests.
+
+Difficult mocking: Tests become large brittle stubs because you must mock whole page objects 
+                    instead of a focused client.
+
+
+
+
+1) Problem example — violates DIP (bad)
+
+
+
+// apiClient.concrete.ts (concrete low-level)
+class ApiClient {
+  constructor(private baseUrl: string) {}
+  async get(endpoint: string) {
+    const res = await fetch(this.baseUrl + endpoint);
+    return res.json();
+  }
+}
+
+// user.page.ts (high-level module)
+class UserPage {
+  private api: ApiClient;
+  constructor() {
+    // ❌ directly creates concrete dependency
+    this.api = new ApiClient('https://api.example.com');
+  }
+
+  async loadUser(id: string) {
+    // high-level logic depends on concrete ApiClient
+    return await this.api.get(`/users/${id}`);
+  }
+}
+
+
+What’s wrong (short):
+
+UserPage creates and depends on a concrete ApiClient → tight coupling.
+
+Hard to unit-test UserPage without real network calls.
+
+Changing network code (fetch → playwright.request) forces edits in many places.
+
+“Here the page depends on a concrete class. With DIP we instead depend on an interface — then we 
+can inject real or mock implementations. 
+That makes tests fast and keeps high-level logic stable when low-level details change.”
+
+
+3) Solution (DIP) — simple, minimal code (interfaces + concrete + mock + wiring)
+
+a) Define a small abstraction
+
+// iApiClient.ts
+export interface IApiClient {
+  get(endpoint: string): Promise<any>;
+}
+
+
+b) Provide concrete and mock implementations
+
+// realApiClient.ts
+import { IApiClient } from './iApiClient';
+export class RealApiClient implements IApiClient {
+  constructor(private baseUrl: string) {}
+  async get(endpoint: string) {
+    const res = await fetch(this.baseUrl + endpoint);
+    return res.json();
+  }
+}
+
+// mockApiClient.ts
+import { IApiClient } from './iApiClient';
+export class MockApiClient implements IApiClient {
+  constructor(private fixtures: Record<string, any>) {}
+  async get(endpoint: string) {
+    return this.fixtures[endpoint];
+  }
+}
+
+
+c) Make high-level module depend on the interface
+
+
+// user.page.ts
+import { IApiClient } from './iApiClient';
+
+class UserPage {
+  constructor(private api: IApiClient) {}   // ✅ depends on abstraction
+  async loadUser(id: string) {
+    return await this.api.get(`/users/${id}`);
+  }
+}
+
+
+d) Wiring / injection examples
+
+Manual injection (unit test):
+
+const mock = new MockApiClient({ '/users/1': { id: '1', name: 'A' } });
+const userPage = new UserPage(mock);
+const user = await userPage.loadUser('1'); // fast, no network
+
+
+Playwright fixture injection (test-run wiring):
+
+// fixtures.ts (conceptual)
+import { test as base } from '@playwright/test';
+import { MockApiClient } from './mockApiClient';
+
+type MyFixtures = { apiClient: IApiClient };
+
+const test = base.extend<MyFixtures>({
+  apiClient: async ({}, use) => {
+    await use(new MockApiClient({ '/users/1': { id: '1', name: 'A' } }));
+  }
+});
+
+test('page uses injected apiClient', async ({ apiClient }) => {
+  const page = new UserPage(apiClient);
+  const user = await page.loadUser('1'); // uses injected mock
+});
+
+
+4) One-liner benefits to tell the interviewer
+
+Testability: inject mocks to avoid network/IO.
+
+Loose coupling: change low-level implementation without editing pages.
+
+Maintainability: TypeScript interfaces catch contract issues early; only small parts change.
+
+Pluggability: swap real vs fake or replace libraries with minimal impact.
+
+5) Quick spoken answer (30 sec)
+
+“DIP says depend on interfaces, not concrete classes. So make a small interface 
+(e.g., IApiClient), have UserPage accept that interface in its constructor, then provide real and 
+mock implementations and inject the appropriate one at runtime or via fixtures. 
+This yields fast, isolated tests and fewer ripple changes when low-level code changes.”

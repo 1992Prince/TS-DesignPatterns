@@ -1,0 +1,13 @@
+Deep Dive Into Liskov Substitution Principle
+
+Liskov Substitution Principle (LSP), is the third principle in the SOLID acronym, 
+which represents five principles of object-oriented programming and design. 
+
+The principle's formal statement is:
+
+"If S is a subtype of T, then objects of type T in a program may be replaced with objects of type S 
+without altering any of the desirable properties of that program."
+
+In simpler words, derived classes must be substitutable for their base classes. 
+That is, a program that uses a base class must be able to substitute a subclass without 
+affecting the correctness of the program.

@@ -1,0 +1,145 @@
+What is Dependency Injection (DI)? (simple)
+
+Dependency Injection (DI) is a design technique where you provide an object’s dependencies from the 
+outside rather than the object creating them itself.
+
+In plain words: give a page/test the services it needs (API client, logger, reporter) instead of 
+the page/test doing new itself.
+
+
+
+Is DI the same as DIP?
+
+No — they are different but related.
+
+DIP is a principle (what you should architect: depend on abstractions, not on concretes).
+
+DI is a mechanism (how you supply those abstractions at runtime).
+
+So: DI is a common and practical way to implement DIP, but you can follow DIP without a full 
+DI framework (by manual injection or factories).
+
+
+
+
+
+Short examples of DI approaches (conceptual)
+
+  Constructor injection: pass the dependency in the constructor (most common, explicit).
+
+  Setter/property injection: set the dependency via a setter or property (useful for optional deps).
+
+  Factory or provider injection: pass a factory that creates the dependency on demand.
+
+  Framework/fixture-based DI: use Playwright fixtures or test setup to provide implementations to 
+  tests/pages.
+
+
+Why use DI (benefits — quick bullets)
+
+Enables easy mocking for unit tests (inject a fake instead of a real HTTP client).
+
+Keeps code loosely coupled and easier to refactor (low-level swaps don’t touch high-level logic).
+
+Improves clarity — dependencies are explicit in constructor/signature.
+
+Facilitates configuration (swap implementations for CI vs local vs prod).
+
+
+“Dependency Injection is the technique of supplying an object’s dependencies from the outside 
+instead of creating them internally. 
+It’s the practical way we follow DIP — we code to interfaces and inject a real or mock 
+implementation at test runtime.”
+
+
+
+here are very small, clear TypeScript examples showing constructor injection and setter injection 
+(with a getter to access the injected dependency). 
+
+
+// Shared interface + implementations
+
+// IApiClient.ts
+export interface IApiClient {
+  get(endpoint: string): Promise<any>;
+}
+
+// RealApiClient.ts
+export class RealApiClient implements IApiClient {
+  constructor(private baseUrl: string) {}
+  async get(endpoint: string) {
+    const res = await fetch(this.baseUrl + endpoint);
+    return res.json();
+  }
+}
+
+// MockApiClient.ts
+export class MockApiClient implements IApiClient {
+  constructor(private fixtures: Record<string, any>) {}
+  async get(endpoint: string) {
+    return this.fixtures[endpoint];
+  }
+}
+
+
+// 1) Constructor Injection (recommended)
+
+// UserPageConstructor.ts
+import { IApiClient } from './IApiClient';
+
+export class UserPageConstructor {
+  constructor(private api: IApiClient) {}    // dependency provided here
+
+  async loadUser(id: string) {
+    return await this.api.get(`/users/${id}`);
+  }
+}
+
+// usage
+const prodPage = new UserPageConstructor(new RealApiClient('https://api.example.com'));
+const testPage = new UserPageConstructor(new MockApiClient({ '/users/1': { id: '1', name: 'A' } }));
+
+
+// 2) Setter Injection (with a getter)
+
+
+// UserPageSetter.ts
+import { IApiClient } from './IApiClient';
+
+export class UserPageSetter {
+  private _api?: IApiClient;   // optional at construction time
+
+  // setter injection
+  setApiClient(api: IApiClient) {
+    this._api = api;
+  }
+
+  // safe getter that throws if not injected (optional pattern)
+  private get api(): IApiClient {
+    if (!this._api) throw new Error('ApiClient not injected');
+    return this._api;
+  }
+
+  async loadUser(id: string) {
+    return await this.api.get(`/users/${id}`);
+  }
+}
+
+// usage
+const page = new UserPageSetter();
+page.setApiClient(new MockApiClient({ '/users/1': { id: '1', name: 'A' } }));
+await page.loadUser('1');
+
+
+Quick pros/cons (say this in interview)
+
+Constructor injection: explicit, immutable, safer — preferred for required deps.
+
+Setter injection: flexible, allows late binding, good for optional deps or frameworks that 
+                  provide fixtures; but risk of using object before injection.
+
+Getter (as shown): use as a guard to fail fast if dependency wasn’t injected.
+
+“Dependency Injection supplies dependencies from outside — use constructor injection for required 
+deps (clear and safe) and setter injection when you need late or optional wiring; 
+always prefer small interfaces for easy mocking.”

@@ -1,0 +1,69 @@
+Q - Is Singleton class exmaple is thread safe?
+
+✅ What your code does
+
+Your code ensures:
+
+Only one instance of Singleton is created per runtime (in a single JavaScript execution context, 
+    like one Node.js process or browser tab).
+
+The _value is shared across all references because it’s static.
+
+So from a logical perspective — yes, it behaves as a singleton in JavaScript/TypeScript.
+
+
+❌ But is it thread-safe?
+
+No, it’s not thread-safe — and here’s why:
+
+1. JavaScript (and TypeScript) is single-threaded by default
+
+Normally, in environments like:
+
+Node.js
+
+Browser
+
+there’s only one thread executing code (the main event loop).
+So “thread safety” isn’t an issue — because no two threads can call getInstance() exactly at the same time.
+
+However…
+
+2. When using Worker Threads or Cluster mode in Node.js
+
+Each worker runs in a separate memory space (a separate process or thread).
+That means:
+
+Each worker will have its own copy of this Singleton class.
+
+So you’ll not have a truly global Singleton across threads or processes.
+
+You’ll end up with multiple singleton instances (one per worker).
+
+3. No locking mechanism
+
+Your code:
+
+if (!Singleton.instance) {
+    Singleton.instance = new Singleton();
+}
+
+is not atomic.
+If two threads (say, two workers) could execute this at the same time, they might both see 
+instance as undefined and create separate objects.
+
+✅ When is it “safe enough”?
+
+✅ In a browser or single-threaded Node.js app, yes — it’s effectively safe.
+
+❌ In a multi-threaded environment (e.g., Node.js worker threads, clustered apps) — not thread-safe.
+
+
+
+🧩 If you really need a thread-safe singleton (Node.js workers)
+
+You’d need some inter-process synchronization (e.g., shared memory or IPC):
+
+Use a message-passing approach (like the worker_threads module’s parentPort).
+
+Or persist the singleton state in a shared resource (like Redis, file, or database).
