@@ -1,10 +1,10 @@
-interface Shape{
+interface Shape3{
     area(): number;
     perimeter(): number;
 }
 
 // CIRCLE CLASS
-class Circle implements Shape {
+class Circle3 implements Shape3 {
     constructor(private radius: number) {}
 
     area(): number {
@@ -17,7 +17,7 @@ class Circle implements Shape {
 }
 
 // RECTANGLE CLASS
-class Rectangle implements Shape {
+class Rectangle3 implements Shape3 {
     constructor(private width: number, private height: number) {}
 
     area(): number {
@@ -30,12 +30,12 @@ class Rectangle implements Shape {
 }
 
 // same fun to calculate area of any shape
-function calculateTotalArea(shape: Shape): number {
+function calculateTotalArea(shape: Shape3): number {
     return shape.area()
 }
 
 
-let circle: Circle = new Circle(5);
-let rectangle: Rectangle = new Rectangle(10,20);
-console.log("Area of Circle: ", calculateTotalArea(circle));
-console.log("Area of Rectagle: ", calculateTotalArea(rectangle));
+let circle3: Circle3 = new Circle3(5);
+let rectangle3: Rectangle3 = new Rectangle3(10,20);
+console.log("Area of Circle: ", calculateTotalArea(circle3));
+console.log("Area of Rectagle: ", calculateTotalArea(rectangle3));

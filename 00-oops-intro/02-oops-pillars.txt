@@ -1,0 +1,107 @@
+🧠 OOP Concepts in TypeScript — Summary Notes
+
+
+🔹 1️⃣  Abstraction
+
+Abstraction means hiding implementation details and showing only essential features to the user.
+In TypeScript, abstraction can be achieved in two ways:
+
+1. Using abstract classes → for partial abstraction
+
+    - Can have both abstract methods (no body) and concrete methods (with body).
+    - Abstract class cannot be instantiated directly.
+
+2. Using interface → for 100% abstraction
+
+    - Defines what to do, not how to do it.
+    - The implementing class must define all interface methods.
+
+🧩 Example:
+
+abstract class Shape {
+  abstract area(): number;  // abstract method
+  showInfo() {
+    console.log("This is a shape");
+  }
+}
+
+interface Drawable {
+  draw(): void;
+}
+
+
+🔹 2️⃣  Inheritance
+
+Inheritance allows a class to acquire properties and behavior of another class.
+Done using the extends keyword in TypeScript.
+A subclass can access parent class members using super.
+
+🏷️ Types of Inheritance
+
+1. Single-level → A → B
+2. Multi-level → A → B → C
+3. Hierarchical → A → B and A → C
+4. Multiple inheritance ❌ Not supported with classes
+        ✅ Possible only through interfaces
+        A class can extend only one class but can implement multiple interfaces.
+
+🧩 Example:
+
+class Parent {}
+class Child extends Parent {}  // single inheritance
+
+interface A {}
+interface B {}
+class C implements A, B {}    // multiple inheritance via interfaces
+
+
+🔹 3️⃣   Polymorphism
+
+Polymorphism = "Many forms" → same method behaves differently based on the object.
+TypeScript supports runtime polymorphism (like Java overriding).
+Achieved by overriding a parent method in the child class.
+
+Compile-time polymorphism (method overloading) is ❌ not truly supported,
+but can be simulated using function overloads (multiple signatures, one implementation).
+
+🧩 Example:
+
+class Animal {
+  makeSound() { console.log("Animal sound"); }
+}
+
+class Dog extends Animal {
+  makeSound() { console.log("Dog barks"); }
+}
+
+
+🔹 4️⃣   Encapsulation
+
+Encapsulation = wrapping data and methods together and controlling access to them.
+Achieved in TypeScript by:
+    1. Making fields private (data hiding)
+    2. Providing getters and setters for controlled access and validation.
+
+🧩 Example:
+
+class Employee {
+  private _salary: number;
+
+  get salary() {
+    return this._salary;
+  }
+
+  set salary(amount: number) {
+    if (amount < 0) throw new Error("Invalid salary");
+    this._salary = amount;
+  }
+}
+
+
+🧠 3️⃣ So when do we see Promise<string>?
+
+| Example                               | Meaning                                                                  |
+| ------------------------------------- | ------------------------------------------------------------------------ |
+| `function getName(): Promise<string>` | Function will **eventually return a string** (wrapped in a Promise).     |
+| `function getUser(): Promise<User>`   | Function will return a **User object**, but asynchronously.              |
+| `async function fetchData()`          | Automatically returns a Promise (even if you don’t explicitly write it). |
