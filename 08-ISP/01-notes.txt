@@ -42,16 +42,21 @@ And base page is also becoming bigger.
 This breaks ISP principle.
 Don’t use one giant BasePage (with lots of methods and validation methods) — split by validation/behavior.
 A page extending it will not need all methods or have to implement all abstract methods of base page
-Example: move form checks to FormValidation and table checks to TableValidation so pages only implement what they need.
+Example: move form checks to FormValidation and table checks to TableValidation so pages only implement what 
+         they need.
 
 Expose small capability interfaces and delegate to helpers.
-Example: FileUploadCapability is implemented by a FileUploadHelper used by pages that need uploads — keeps page objects slim.
+Example: FileUploadCapability is implemented by a FileUploadHelper used by pages that need uploads — keeps 
+         page objects slim.
 
 Make pages mock-friendly by depending on capabilities, not concrete pages.
-Example: unit tests mock ToastNotificationCapability or ApiInterceptsCapability rather than stubbing 30 unrelated methods.
+Example: unit tests mock ToastNotificationCapability or ApiInterceptsCapability rather than stubbing 30 
+         unrelated methods.
 
 Compose behaviors for complex pages instead of inheritance.
-Example: a dashboard page composes FilterCapability + ExportCapability instead of inheriting everything from a big base.
+Example: a dashboard page composes FilterCapability + ExportCapability instead of inheriting everything from a 
+         big base.
 
 Refactor incrementally and avoid over-splitting — group related methods sensibly.
-Example: start with Form and Table capabilities, migrate pages one-by-one, and only create new capability when reused by multiple pages.
+Example: start with Form and Table capabilities, migrate pages one-by-one, and only create new capability 
+         when reused by multiple pages.

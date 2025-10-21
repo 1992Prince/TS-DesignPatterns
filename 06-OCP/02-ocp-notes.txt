@@ -1,4 +1,5 @@
 🧩 Open/Closed Principle (OCP)
+
 🔹 Definition (Simple & Interview-Ready)
 
 A class should be open for extension but closed for modification.
@@ -13,22 +14,18 @@ Instead of editing a class every time requirements change,
 
 💡 Why it matters
 
-In automation frameworks or large systems:
+    - In automation frameworks or large systems:
+    - Frequent changes in business logic or test behaviors can break existing working modules.
+    - Following OCP ensures stability, scalability, and fewer regressions.
+    - Helps in plug-and-play design, where new features or test flows can be added easily.
 
-Frequent changes in business logic or test behaviors can break existing working modules.
-
-Following OCP ensures stability, scalability, and fewer regressions.
-
-Helps in plug-and-play design, where new features or test flows can be added easily.
 
 🔹 Core idea
 
-Don’t touch existing, tested classes.
-
-Introduce new behavior by creating new classes or implementations of abstractions 
-(like interfaces or abstract classes).
-
-Existing code should work the same, without any modification.
+    - Don’t touch existing, tested classes.
+    - Introduce new behavior by creating new classes or implementations of abstractions 
+      (like interfaces or abstract classes).
+    - Existing code should work the same, without any modification.
 
 
 
@@ -37,7 +34,9 @@ Existing code should work the same, without any modification.
 
 As an SDET Lead, you can say:
 
-“In test automation, OCP helps us design framework modules like Reporting, Drivers, or Wait Utilities in a way that new features (like new report formats, browsers, or wait conditions) can be added without changing the core logic.”
+“In test automation, OCP helps us design framework modules like Reporting, Drivers, or Wait Utilities in a way 
+that new features (like new report formats, browsers, or wait conditions) can be added without 
+changing the core logic.”
 
 Examples (conceptually):
 
@@ -48,17 +47,20 @@ Adding a new report type → implement a new ReportGenerator class instead of ed
 Adding new test data sources → create a new DataProvider that implements the same interface.
 
 🔹 Benefits
-Benefit	Description
-✅ Maintainability	Fewer changes = fewer bugs
-✅ Extensibility	Add new features easily
-✅ Stability	Existing tested code stays untouched
-✅ Readability	Clear separation of responsibilities
-🚫 Common Violation
 
-When developers edit existing classes every time a new feature or case appears (e.g., adding if-else or switch statements for every new condition), they break OCP.
+Benefit	Description
+    ✅ Maintainability	Fewer changes = fewer bugs
+    ✅ Extensibility	Add new features easily
+    ✅ Stability	Existing tested code stays untouched
+    ✅ Readability	Clear separation of responsibilities
+    🚫 Common Violation
+
+When developers edit existing classes every time a new feature or case appears (e.g., adding if-else or switch 
+statements for every new condition), they break OCP.
 
 Example conceptually:
-Adding another “browser” or “report format” by inserting more if/else conditions inside an existing method instead of creating a new class.
+Adding another “browser” or “report format” by inserting more if/else conditions inside an 
+existing method instead of creating a new class.
 
 That makes code harder to maintain and more bug-prone.
 

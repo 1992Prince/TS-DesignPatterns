@@ -1,4 +1,5 @@
 🧩 UNION TYPES IN TYPESCRIPT
+
 🧠 Concept
 
 A union type allows a variable, parameter, or return value to hold more than one possible type.
@@ -10,8 +11,9 @@ Think of it as:
 📘 Syntax
 let value: TypeA | TypeB;
 
-
 The | means type-level OR, not logical OR (||).
+
+
 
 🔹 1️⃣ Union Types with Primitive Types
 
@@ -25,7 +27,10 @@ id = true;    // ❌ invalid (not part of union)
 
 
 💡 Why use:
+
 Sometimes APIs return either a number or string (e.g., an ID that can be numeric or alphanumeric).
+
+
 
 🔹 2️⃣ Union Types with Custom Types (Interfaces / Objects)
 
@@ -43,6 +48,8 @@ person = { name: "Raj" };                    // ❌ invalid
 
 💡 The object must satisfy at least one complete type in the union.
 
+
+
 🔹 3️⃣ Union Types with Literal Values (String Literal Unions)
 
 Example:
@@ -59,7 +66,9 @@ move("north"); // ❌ not allowed
 
 
 💡 Common in frameworks like Playwright, React, etc. — e.g.
+
 waitUntil: "load" | "domcontentloaded" | "networkidle"
+
 
 🔹 4️⃣ Union Types with Mixed Values and Types
 

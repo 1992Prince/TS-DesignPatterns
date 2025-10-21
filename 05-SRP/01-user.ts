@@ -67,3 +67,48 @@ class UserAuthentication {
 // - Utilities handle only reusable logic (like authentication, config).
 // - Each component remains independent and easier to maintain.
 // ------------------------------------------------------------
+
+
+/* 
+  SRP (Single Responsibility Principle) - Short & Simple:
+  ------------------------------------------------------
+  Every module/class should have exactly one reason to change.
+  That means one class = one responsibility (one job).
+*/
+
+/* ------------------------------
+   Quick plain-English explanation
+   ------------------------------
+   SRP means split code so each piece does just one job:
+   - Page objects: only know how to interact with UI (clicks, fills).
+   - Services: only know how to call APIs or perform data logic.
+   - Helpers/Utils: small pure functions or formatting helpers.
+   - Tests: orchestrate the flow using the above building blocks.
+   This makes code easier to read, test, and change in interviews / real life.
+*/
+
+/* ================================
+   BAD EXAMPLE: Violates SRP
+   ================================
+   Single test class have test method, does navigation,locators are hardcoded here, actions like click/fill done here,
+   API calls are done if needed, assertions, and test data.
+
+   So if any of these things change, this class needs to be changed.
+*/
+
+/* 
+  Problems in BadBigPage:
+  - UI interaction, API calls, assertions, and test data are all bundled.
+  - Many reasons to change: UI change, API change, assertion style change, or test data change.
+*/
+
+
+/* ================================
+   GOOD EXAMPLE: Follows SRP
+   ================================
+   Split responsibilities:
+   - LoginPage: UI interactions only
+   - AuthService: API calls only
+   - TestData: test data only
+   - Assertions / Test: test orchestration only
+*/

@@ -1,4 +1,5 @@
 🧩 Explanation of the Example — Open/Closed Principle in Action
+
 🔹 Problem Recap (Before OCP)
 
 Earlier we had function or class:
@@ -7,7 +8,8 @@ function giveDiscount(customerType: "regular" | "premium"): number { ... }
 
 
 Every time a new customer type (vvip, gold, etc.) was added,
-➡️ we had to modify the function — breaking OCP.
+➡️ we had to modify the function using if and else condition — breaking OCP.
+
 
 🔹 Objective
 
@@ -24,9 +26,7 @@ interface Customer {
 
 
 This ensures every customer class must provide its own discount rule.
-
 The system doesn’t care which type of customer — just that it implements giveDiscount().
-
 Concrete implementations for each customer type
 
 class RegularCustomer implements Customer {
@@ -75,16 +75,14 @@ Works for Regular, Premium, or any new type that implements Customer.
 | **Polymorphism**            | `CustomerDiscount.giveDiscount()` calls the correct implementation dynamically at runtime.            |
 | **Single Responsibility**   | Each class handles only one responsibility — its own discount logic.                                  |
 
+
+
 🚀 Real-World Analogy
 
 Think of your CustomerDiscount class like a payment gateway:
-
 It doesn’t care which payment method (Card, UPI, PayPal).
-
 It only calls the pay() method defined in the interface.
-
 Add new payment type → just implement the interface.
-
 Same idea here — CustomerDiscount never changes.
 
 🧠 Summary (30-sec Interview Answer)
@@ -106,15 +104,16 @@ You said:
 They’ll just create a RegularCustomer or PremiumCustomer object and pass it to CustomerDiscount.
 They shouldn’t know or care how those classes are implemented.”
 
-That’s exactly the purpose of abstraction — and it’s a design principle used everywhere (frameworks, SDKs, APIs, test frameworks).
+That’s exactly the purpose of abstraction — and it’s a design principle used everywhere 
+(frameworks, SDKs, APIs, test frameworks).
+
 
 🔹 What’s Really Happening
+
 ✅ 1. You’re Exposing Only the Contract — Not the Implementation
 
 Other developers only need to know:
-
 Customer (interface)
-
 CustomerDiscount (the class that accepts a Customer)
 
 They don’t need to see the code inside RegularCustomer or PremiumCustomer — only how to instantiate them.

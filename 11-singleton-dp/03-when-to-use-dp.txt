@@ -1,7 +1,7 @@
 🧠 Singleton Design Pattern — Kab Use Karein (Simple Hinglish Me)
 
 
-1️⃣ Jab Global Variables Use Kar Rahe Ho
+1️⃣  Jab Global Variables Use Kar Rahe Ho
 
 Agar tum system me aise global variables use kar rahe ho jinka data sab jagah same rehna chahiye,
 toh wo ek Singleton ka clear signal hai.
